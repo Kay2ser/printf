@@ -87,30 +87,13 @@ int print_octal(va_list types, char buffer[],
  *
  * return: Number of char printed
  */
-int print_octal(va_list types, char buffer[],
-	int flags, int width, int precision, int size)
-{
-	return (print_hexa(types, "0123456789abcdef", buffer,
-		flags, 'x', width, precision, size));
-}
 
 /*******PRINT UNSIGNED NUMBER IN UPPER HEXADECIMAL*******/
-/**
- * print_hexa_upper - prints an unsigned number in upper hexadecimal notation
- * @types: Lists of arguments
- * @buffer: Buffer array to handle print
- * @flags: Calculates active flags
- * @width: Gets width
- * @precision: precision specification
- * @size: Size specifier
- *
- * return: Number of chars to be printed
- */
+
 int print_hexadecimal(va_list types, char buffer[],
 	int flags, int width, int precision, int size)
 {
-	return (print_hexa(types, "0123456789ABCDEF", buffer,
-		flags, 'X', precision, size));
+	return (print_hexa(types, "0123456789ABCDEF", buffer, flags, 'x' , width, precision, size));
 }
 
 /*******PRINT HEXX NUM IN LOWER OR UPPER*******/

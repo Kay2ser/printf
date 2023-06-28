@@ -1,58 +1,55 @@
 #include <stdarg.h>
 #include <stdio.h>
+#include <string.h>
 #include "main.h"
+
 /**
  * get_length - get length of the formatted string
  * @format: the format string
+ * @args: the va_list of arguments
  *
- * Return: The length of the formatted stringi
+ * Return: The length of the formatted string
  */
-int get_length(const char *format, ...)
+int get_length(const char *format, va_list args)
 {
-	buffer_t *output;
-	va_list args;
-	int char_count = 0;
+    int char_count = 0;
 
-	va_start(args, format);
-	output = init_buffer();
-	if (output == NULL)
-		return (-1);
+    for (; *format != '\0'; format++)
+    {
+        if (*format == '%')
+        {
+            format++;
 
-	for (; *format != '\0'; format++)
-	{
-		if (*format == '%')
-		{
-			format++;
+            if (*format == 'c')
+            {
+                va_arg(args, int);
+                char_count++;
+            }
+            else if (*format == 's')
+            {
+                char *str = va_arg(args, char *);
+                int str_len = strlen(str);
 
-			if (*format == 'c')
-			{
-				va_arg(args, int);
-				char_count++;
-			}
-			else if (*format == 's')
-			{
-				char *str = va_arg(args, char *);
-				int str_len = strlen(str);
+                char_count += str_len;
+            }
+            else if (*format == '%')
+            {
+                char_count++;
+            }
+            else
+            {
+                char_count += 2;
+            }
+        }
+        else
+        {
+            char_count++;
+        }
+    }
 
-				char_count += str_len;
-			}
-			else if (*format == '%')
-			{
-				char_count++;
-			}
-			else
-			{
-				char_count += 2;
-			}
-		}
-		else
-		{
-			char_count++;
-		}
-	}
-	cleanup(args, output);
-	return (char_count);
+    return char_count;
 }
+
 /**
  * _printf - Prints formatted output to stdout
  * @format: The format string
@@ -61,56 +58,19 @@ int get_length(const char *format, ...)
  */
 int _printf(const char *format, ...)
 {
-	int char_count = get_length(format, args);
+    va_list args;
+    int char_count;
 
-	buffer_t *output = init_buffer();
+    va_start(args, format);
+    char_count = get_length(format, args);
+    va_end(args);
 
-	if (output == NULL)
-	{
-		return (-1);
-	}
-	va_start(args, format);
-	for (; *format != '\0'; format++)
-	{
-		if (*format == '%')
-		{
-			format++;
+    char buffer[char_count + 1];
+    buffer[char_count] = '\0';
 
-			if (*format == 'c')
-			{
-				char c = va_arg(args, int);
+    int ret_count = handle_print(format, 0, args, buffer, 0, 0, 0, 0);
+    write(1, buffer, ret_count);
 
-				_memcpy(output->start + char_count, &c, 1);
-				char_count++;
-			}
-			else if (*format == 's')
-			{
-				char *str = va_arg(args, char *);
-				int str_len = strlen(str);
-
-				_memcpy(output->start + char_count, str, str_len);
-				char_count += str_len;
-			}
-			else if (*format == '%')
-			{
-				_memcpy(output->start + char_count, "%", 1);
-				char_count++;
-			}
-			else
-			{
-				_memcpy(output->start + char_count, "%", 1);
-				_memcpy(output->start + char_count + 1, format, 1);
-				char_count += 2;
-			}
-		}
-		else
-		{
-			_memcpy(output->start + char_count, format, 1);
-			char_count++;
-		}
-	}
-	cleanup(args, output);
-	write(1, output->start, output->len);
-	return (char_count);
+    return ret_count;
 }
 

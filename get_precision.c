@@ -1,48 +1,45 @@
 #include <stdarg.h>
 #include <stdio.h>
+#include <string.h>
 #include "main.h"
 
-int get_precision(const char *format, ...)
+int get_precision(const char *format, int *i, va_list list)
 {
-	buffer_t *output;
-	va_list args;
 	int char_count = 0;
 	int precision = -1;
 
-	va_start(args, format);
-	output = init_buffer();
-	if (output == NULL)
+	for (; *format[*i] != '\0'; (*i)++)
 	{
-		return (-1);
-	}
-	for (; *format != '\0'; format++)
-	{
-		if (*format == '%')
+		if (*format[*i] == '%')
 		{
-			format++;
-			if (*format == 'c')
+			(*i)++;
+			if (*format[*i] == 'c')
 			{
-				char c = va_arg(args, int);
-
 				char_count++;
+				int c = va_arg(list, int);
+				UNUSED(c);
 			}
-			else if (*format == 's')
+			else if (*format[*i] == 's')
 			{
-				char *str = va_arg(args, char *);
+				char *str = va_arg(list, char *);
 				int str_len = strlen(str);
 
 				char_count += str_len;
 			}
-			else if (*format == '%')
+			else if (*format[*i] == '%')
 			{
 				char_count++;
 			}
-			else if (*format == '.')
+			else if (*format[*i] == '.')
 			{
-				format++;
-				if (*format >= '0' && *format <= '9')
+				(*i)++;
+				if (*format[*i] >= '0' && *format[*i] <= '9')
 				{
+					precision = format[*i] - '0';
+					while (format[*i + 1] >= '0' && format[*i + 1] <= '9')
+					{
 					precision = precision * 10 + (*format - '0');
+					(*i)++;
 				}
 				else
 				{

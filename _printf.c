@@ -1,5 +1,6 @@
 #include <stdarg.h>
 #include <stdio.h>
+#include <string.h>
 #include "main.h"
 
 /**
@@ -9,24 +10,38 @@
  *  Return: the no of charachters printed
  */
 
+typedef struct buffer_t
+{
+	char *start;
+	int size;
+} buffer_t;
+
+int init_buffer(void);
+void _memcpy(char *dest, const char *src, int len);
+int _strlen(const char *str);
+void cleanup(va_list args, buffer_t *output);
+
 int _printf(const char *format, ...)
+
 {
 	buffer_t *output;
 	va_list args;
 	int char_count = 0;
 
 	va_start(args, format);
-	output = init_buffer();
+	output = (buffer_t *)init_buffer();
 	if (output == NULL)
 		return (-1);
+
 	for (; *format != '\0'; format++)
+
 	{
 		if (*format == '%')
 		{
 			format++;
 			if (*format == 'c')
 			{
-				char c = va_arg(args, int)
+				char c = va_arg(args, int);
 					_memcpy(output->start + char_count, &c, 1);
 				char_count++;
 			}

@@ -40,7 +40,7 @@ int print_string(va_list types, char buffer[],
 
 	UNUSED(buffer);
 	UNUSED(flags);
-	UNSUSED(width);
+	UNUSED(width);
 	UNUSED(precision);
 	UNUSED(size);
 	if (str == NULL)

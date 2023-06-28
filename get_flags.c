@@ -17,19 +17,23 @@ int get_flags(const char *format)
 	{
 		if (*format == '-')
 		{
-			flags |= FLAG_LEFT_JUSTIFY;
+			flags |= F_MINUS;
 		}
 		else if (*format == '+')
 		{
-			flags |= FLAG_SIGN;
+			flags |= F_PLUS;
+		}
+		else if (*format == '0')
+                {
+			flags |= F_ZERO;
 		}
 		else if (*format == ' ')
 		{
-			flags |= FLAG_SPACE;
+			flags |= F_SPACE;
 		}
 		else if (*format == '#')
 		{
-			flags |= FLAG_ALTERNATE;
+			flags |= F_HASH;
 		}
 		format++;
 	}

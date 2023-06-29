@@ -18,6 +18,7 @@
 /* SIZES */
 #define S_LONG 2
 #define S_SHORT 1
+#define S_SIZET 3
 
 /**
  * struct fmt - struct op
@@ -79,8 +80,8 @@ int print_pointer(va_list types, char buffer[],
                   int flags, int width, int precision, int size);
 
 /* functions to handle other specifiers */
-int get_flags(const char *format, int *i);
-int get_width(const char *format, int *i, va_list list);
+int get_flags(const char *format);
+int get_width(const char *format, ...);
 int get_precision(const char *format, int *i, va_list list);
 int get_size(const char *format, int *i);
 

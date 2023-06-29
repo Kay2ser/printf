@@ -1,4 +1,6 @@
 #include "main.h"
+#include <unistd.h>
+
 /*******WRITE HANDLE*******/
 /**
  * handle_write_char - Prints a string
@@ -68,7 +70,7 @@ int write_number(int is_negative, int ind, char buffer[],
 	if (is_negative)
 		extra_ch = '-';
 	else if (flags & F_PLUS)
-		extrs_ch = '+';
+		extra_ch = '+';
 	else if (flags & F_SPACE)
 		extra_ch = ' ';
 
@@ -234,7 +236,7 @@ int write_pointer(char buffer[], int ind, int width,
 	buffer[--ind] = '0';
 	if (extra_c)
 		buffer[--ind] = extra_c;
-		return (write(1, &buffer[ind], BUFF_SIZE - ind - 1));
+	return (write(1, &buffer[ind], BUFF_SIZE - ind - 1));
 }
 
 

@@ -9,24 +9,24 @@
  * Return: size of an integer
  */
 
-int get_size(const char *format)
+int get_size(const char *format, int *i)
 {
 	int size = 0;
 
-	if (*format == 'h')
+	if (format[*i] == 'h')
 	{
-		size = SIZE_SHORT;
-		format++;
+		size = S_SHORT;
+		(*i)++;
 	}
-	else if (*format == 'l')
+	else if (format[*i] == 'l')
 	{
-		size = SIZE_LONG;
-		format++;
+		size = S_LONG;
+		(*i)++;
 	}
-	else if (*format == 'z')
+	else if (format[*i] == 'z')
 	{
-		size = SIZE_SIZET;
-		format++;
+		size = S_SIZET;
+		(*i)++;
 	}
 	return (size);
 }

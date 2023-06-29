@@ -1,20 +1,16 @@
 #include <stdarg.h>
 #include <stdio.h>
+#include <string.h>
 #include "main.h"
 
 int get_width(const char *format, ...)
 {
-	buffer_t *output;
 	va_list args;
 	int char_count = 0;
 	int width = 0;
 
 	va_start(args, format);
-	output = init_buffer();
-	if (output == NULL)
-	{
-		return (-1);
-	}
+
 	for (; *format != '\0'; format++)
 	{
 		if (*format == '%')
@@ -22,8 +18,7 @@ int get_width(const char *format, ...)
 			format++;
 			if (*format == 'c')
 			{
-				char c = va_arg(args, int);
-
+				va_arg(args, int);
 				char_count++;
 			}
 			else if (*format == 's')
@@ -51,6 +46,7 @@ int get_width(const char *format, ...)
 			char_count++;
 		}
 	}
-	cleanup(args, output);
+	va_end(args);
+
 	return (width);
 }

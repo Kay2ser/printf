@@ -1,52 +1,35 @@
-#include <stdarg.h>
-#include <stdio.h>
-#include <string.h>
 #include "main.h"
-
-int get_width(const char *format, ...)
+/**
+ * get_width - calculates the width for printing
+ * @format: formatted string in which to print the arguments
+ * @i: list of arguments to be printed
+ * @list: list of arguments
+ *
+ * Return: width
+ */
+int get_width(const char *format, int *i, va_list list)
 {
-	va_list args;
-	int char_count = 0;
+	int curr_i;
 	int width = 0;
 
-	va_start(args, format);
-
-	for (; *format != '\0'; format++)
+	for (curr_i = *i + 1; format[curr_i] != '\0'; curr_i++)
 	{
-		if (*format == '%')
+		if (is_digit(format[curr_i]))
 		{
-			format++;
-			if (*format == 'c')
-			{
-				va_arg(args, int);
-				char_count++;
-			}
-			else if (*format == 's')
-			{
-				char *str = va_arg(args, char *);
-				int str_len = strlen(str);
-
-				char_count += str_len;
-			}
-			else if (*format == '%')
-			{
-				char_count++;
-			}
-			else if (*format >= '0' && *format <= '9')
-			{
-				width = width * 10 + (*format - '0');
-			}
-			else
-			{
-				break;
-			}
+			width *= 10;
+			width += format[curr_i] - '0';
+		}
+		else if (format[curr_i] == '*')
+		{
+			curr_i++;
+			width = va_arg(list, int);
+			break;
 		}
 		else
-		{
-			char_count++;
-		}
+			break;
 	}
-	va_end(args);
+
+	*i = curr_i - 1;
 
 	return (width);
 }

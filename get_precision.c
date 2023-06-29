@@ -1,63 +1,40 @@
-#include <stdarg.h>
-#include <stdio.h>
-#include <string.h>
 #include "main.h"
-
+/**
+ * get_precision - claculates the precision for printing
+ * @format: formatted string in which to print the arguments
+ * @i: list of arguments to be printed
+ * @list: list of arguments
+ *
+ * Return: precision
+ */
 int get_precision(const char *format, int *i, va_list list)
 {
-	int char_count = 0;
+	int curr_i = *i + 1;
 	int precision = -1;
 
-	int c;
+	if (format[curr_i] != '.')
+		return (precision);
 
-	for (; format[*i] != '\0'; (*i)++)
+	precision = 0;
+
+	for (curr_i += 1; format[curr_i] != '\0'; curr_i++)
 	{
-		if (format[*i] == '%')
+		if (is_digit(format[curr_i]))
 		{
-			(*i)++;
-			if (format[*i] == 'c')
-			{
-				char_count++;
-				c = va_arg(list, int);
-				UNUSED(c);
-			}
-			else if (format[*i] == 's')
-			{
-				char *str = va_arg(list, char *);
-				int str_len = strlen(str);
-
-				char_count += str_len;
-			}
-			else if (format[*i] == '%')
-			{
-				char_count++;
-			}
-			else if (format[*i] == '.')
-			{
-				(*i)++;
-				if (format[*i] >= '0' && format[*i] <= '9')
-				{
-					precision = format[*i] - '0';
-					while (format[*i + 1] >= '0' && format[*i + 1] <= '9')
-					{
-					precision = precision * 10 + (*format - '0');
-					(*i)++;
-					}
-				}
-				else
-				{
-					break;
-				}
-			}
-			else
-			{
-				break;
-			}
+			precision *= 10;
+			precision += format[curr_i] - '0';
+		}
+		else if (format[curr_i] == '*')
+		{
+			curr_i++;
+			precision = va_arg(list, int);
+			break;
 		}
 		else
-		{
-			char_count++;
-		}
+			break;
 	}
+
+	*i = curr_i - 1;
+
 	return (precision);
 }
